@@ -11,12 +11,6 @@ const router = new Router();
 
 app.use(cors());
 
-app.use(async function (ctx, next) {
-  console.log('before');
-  await next();
-  console.log('after');
-});
-
 app.use(jwt({
   secret: koaJwtSecret({
     jwksUri: `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`,
