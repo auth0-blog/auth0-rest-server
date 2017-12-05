@@ -5,7 +5,8 @@ module.exports = {
 };
 
 async function getEntities(ctx) {
-  ctx.body = await mongo.find(ctx.state.user.sub, ctx.state.entity) || [];
+  const {state, query} = ctx;
+  ctx.body = await mongo.find(state.user.sub, state.entity, JSON.parse(query.filter || '{}')) || [];
   ok(ctx);
 }
 

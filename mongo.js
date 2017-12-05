@@ -18,10 +18,11 @@ async function insert(userId, entity, data) {
 }
 
 // retrieves data from a collection called `${userId}/${entity}`
-async function find(userId, entity) {
+async function find(userId, entity, filter) {
+  console.log(`- Querying ${userId}/${entity.name} with filter: ${filter}`);
   const connection = await getConnection();
   const collection = connection.collection(`${userId}/${entity.name}`);
-  const result = await collection.find();
+  const result = await collection.find(filter);
   return await result.toArray();
 }
 
@@ -46,10 +47,7 @@ let db;
 async function getConnection() {
   if (!db) {
     const asyncConnect = promisify(mongodb.MongoClient.connect);
-    console.log('==== connecting to database');
-    console.log('==== db url: mongodb://' + process.env.MONGODB_URL);
     db = await asyncConnect('mongodb://' + process.env.MONGODB_URL);
-    console.log(db);
   }
   return db;
 }
