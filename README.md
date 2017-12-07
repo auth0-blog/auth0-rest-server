@@ -44,19 +44,20 @@ docker run --name secured-wildcard \
   -e "AUTH0_DOMAIN=bk-samples.auth0.com" \
   -e "AUTH0_AUDIENCE=https://contacts.digituz.com.br" \
   -d brunokrebs/secured-wildcard
+```
 
-docker build -t brunokrebs/secured-wildcard .
+If it is already running there, we will need to stop, remove, and remove the image so we can fetch an up-to-date image:
 
-docker tag brunokrebs/secured-wildcard brunokrebs/secured-wildcard
-docker push brunokrebs/secured-wildcard
-brunokrebs/secured-wildcard
-
-docker run --name secured-wildcard-mongo \
-  --network digituz \
-  -p 27017:27017 \
-  -d mongo
-
+```
 docker stop secured-wildcard
 docker rm secured-wildcard
 docker rmi brunokrebs/secured-wildcard
+```
+
+### Updating Docker Hub Image
+
+There is a script that builds the image, generates the tag, and push it to Docker Hub:
+
+```bash
+./docker-push
 ```
