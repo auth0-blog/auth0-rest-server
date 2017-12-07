@@ -38,6 +38,11 @@ Below, you can find a few Docker-related commands. The first one downloads the i
 properties passed through parameters. Note that the application expects three commands
 
 ```bash
+docker run --name secured-wildcard-mongo \
+  --network digituz \
+  -p 27017:27017 \
+  -d mongo
+
 docker run --name secured-wildcard \
   --network digituz \
   -e "MONGODB_URL=secured-wildcard-mongo:27017/contacts" \
