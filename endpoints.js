@@ -1,7 +1,7 @@
 const mongo = require('./mongo');
 
 module.exports = {
-  getEntities, getEntity, addNewEntity, deleteEntity
+  getEntities, getEntity, addNewEntity, updateEntity, deleteEntity
 };
 
 async function getEntities(ctx) {
@@ -17,6 +17,11 @@ async function getEntity(ctx) {
 
 async function addNewEntity(ctx) {
   await mongo.insert(ctx.state.user.sub, ctx.state.entity, ctx.request.body);
+  ok(ctx);
+}
+
+async function updateEntity(ctx) {
+  await mongo.update(ctx.state.user.sub, ctx.state.entity, ctx.request.body);
   ok(ctx);
 }
 

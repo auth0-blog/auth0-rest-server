@@ -3,7 +3,7 @@ const {promisify} = require('util');
 
 // hiding connect and db
 module.exports = {
-  insert, find, findOne, deleteOne
+  insert, update, find, findOne, deleteOne
 };
 
 // inserts data into a collection called `${userId}/${entity}`
@@ -14,6 +14,15 @@ async function insert(userId, entity, data) {
     await collection.insertOne(data);
   } else {
     await collection.insertMany(data);
+  }
+}
+
+async function update(userId, entity, data) {
+  const connection = await getConnection();
+  const collection = connection.collection(`${userId}/${entity.name}`);
+  if (!Array.isArray(data)) {
+    delete data._id;
+    await collection.updateOne({_id: mongodb.ObjectId(entity.id) }, { $set: { ...data } });
   }
 }
 

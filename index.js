@@ -60,6 +60,7 @@ async function checkScopes(ctx, next) {
 router.get('/:entity', checkScopes, endpoints.getEntities);
 router.get('/:entity/:id', checkScopes, endpoints.getEntity);
 router.post('/:entity', checkScopes, endpoints.addNewEntity);
+router.put('/:entity/:id', checkScopes, endpoints.updateEntity);
 router.delete('/:entity/:id', checkScopes, endpoints.deleteEntity);
 
 app.use(bodyParser());
