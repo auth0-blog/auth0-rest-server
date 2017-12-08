@@ -1,5 +1,6 @@
 const mongodb = require('mongodb');
 const {promisify} = require('util');
+const assert = require('assert');
 
 // hiding connect and db
 module.exports = {
@@ -8,6 +9,7 @@ module.exports = {
 
 // inserts data into a collection called `${userId}/${entity}`
 async function insert(userId, entity, data) {
+  assert(!data.hasOwnProperty('_id'), 'Do not send ids when inserting new entities.');
   const connection = await getConnection();
   const collection = connection.collection(`${userId}/${entity.name}`);
   if (!Array.isArray(data)) {
