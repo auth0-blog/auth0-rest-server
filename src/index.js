@@ -40,7 +40,7 @@ app.use(jwt({
   issuer: `https://${process.env.AUTH0_DOMAIN}/`
 }));
 
-async function checkScopes(ctx, next) {
+app.use(async (ctx, next) => {
   const {entity, id} = ctx.params;
   const scopes = ctx.state.user.scope.split(' ');
   const scopeNeeded = ctx.method.toLowerCase() + ':' + entity;
@@ -55,13 +55,13 @@ async function checkScopes(ctx, next) {
     return await next();
   }
   return ctx.status = 401;
-}
+});
 
-router.get('/:entity', checkScopes, endpoints.getEntities);
-router.get('/:entity/:id', checkScopes, endpoints.getEntity);
-router.post('/:entity', checkScopes, endpoints.addNewEntity);
-router.put('/:entity/:id', checkScopes, endpoints.updateEntity);
-router.delete('/:entity/:id', checkScopes, endpoints.deleteEntity);
+router.get('/:entity', endpoints.getEntities);
+router.get('/:entity/:id', endpoints.getEntity);
+router.post('/:entity', endpoints.addNewEntity);
+router.put('/:entity/:id', endpoints.updateEntity);
+router.delete('/:entity/:id', endpoints.deleteEntity);
 
 app.use(bodyParser());
 app.use(router.routes());

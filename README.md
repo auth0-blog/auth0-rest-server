@@ -28,14 +28,30 @@ To summarize: a user with id `xyz123` and scopes `get:books`, `post:books`, and 
 - `POST` a new document through `http://localhost:3001/books/`.
 - `DELETE` the document with id `987` through `http://localhost:3001/books/987`.
 
-### Running
+### Running with Node.js
 
-There are two ways to run this project. [As the Auth0 REST Server project is also
-available as an image on Docker Hub](https://hub.docker.com/r/brunokrebs/secured-wildcard/), the easiest one is through
-Docker.
+No matter how and where we run this application, we have to set three environment variables. They are:
+
+- `AUTH0_DOMAIN`: [The domain of our Auth0 account](https://manage.auth0.com/).
+- `AUTH0_AUDIENCE`: [The audience/identifier that represents this API on Auth0](https://manage.auth0.com/#/apis)
+- `MONGODB_URL`: a MongoDB URL to persist our data. We can host our on on the cloud, use some Mongo as a Service like [mLab](https://mlab.com/),
+or host locally (the easiest way is with Docker).
+
+Let's take a look into how we can bootstrap RestFlex from a terminal:
+
+```bash
+export AUTH0_DOMAIN=digituz-corp.auth0.com
+export AUTH0_AUDIENCE=https://digituz-corp.auth0.com/contacts
+export MONGODB_URL=http://localhost:27017/contacts
+```
+
+### Running with Docker
+
+To run this project on Docker, [we can use the public image available on Docker Hub](https://hub.docker.com/r/brunokrebs/secured-wildcard/).
+We can also use the `Dockerfile` available in this repository.
 
 Below, you can find a few Docker-related commands. The first one downloads the image from Docker Hub and runs it with the
-properties passed through parameters. Note that the application expects three commands
+properties passed through parameters.
 
 ```bash
 docker run --name secured-wildcard-mongo \
