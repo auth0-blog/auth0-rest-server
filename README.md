@@ -43,6 +43,8 @@ Let's take a look into how we can bootstrap RestFlex from a terminal:
 export AUTH0_DOMAIN=digituz-corp.auth0.com
 export AUTH0_AUDIENCE=https://digituz-corp.auth0.com/contacts
 export MONGODB_URL=http://localhost:27017/contacts
+
+npm start
 ```
 
 ### Running with Docker
