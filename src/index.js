@@ -13,9 +13,11 @@ app.use(async function exceptionHandler(ctx, next) {
   try {
     await next();
   } catch (err) {
+    ctx.status = 400;
     if (err.message && err.message.indexOf('Unexpected token') === 0 && err.message.indexOf('JSON') > 1){
-      ctx.status = 400;
       ctx.body = { 'message': 'It looks like the filter parameter passed contains a wrong structure.' }
+    } else {
+      console.log(err);
     }
   }
 });
@@ -40,7 +42,7 @@ app.use(jwt({
   issuer: `https://${process.env.AUTH0_DOMAIN}/`
 }));
 
-app.use(async (ctx, next) => {
+async function checkScopes(ctx, next) {
   const {entity, id} = ctx.params;
   const scopes = ctx.state.user.scope.split(' ');
   const scopeNeeded = ctx.method.toLowerCase() + ':' + entity;
@@ -55,13 +57,13 @@ app.use(async (ctx, next) => {
     return await next();
   }
   return ctx.status = 401;
-});
+}
 
-router.get('/:entity', endpoints.getEntities);
-router.get('/:entity/:id', endpoints.getEntity);
-router.post('/:entity', endpoints.addNewEntity);
-router.put('/:entity/:id', endpoints.updateEntity);
-router.delete('/:entity/:id', endpoints.deleteEntity);
+router.get('/:entity', checkScopes, endpoints.getEntities);
+router.get('/:entity/:id', checkScopes, endpoints.getEntity);
+router.post('/:entity', checkScopes, endpoints.addNewEntity);
+router.put('/:entity/:id', checkScopes, endpoints.updateEntity);
+router.delete('/:entity/:id', checkScopes, endpoints.deleteEntity);
 
 app.use(bodyParser());
 app.use(router.routes());
