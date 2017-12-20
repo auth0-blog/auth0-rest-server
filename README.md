@@ -82,5 +82,5 @@ docker rmi brunokrebs/secured-wildcard
 There is a script that builds the image, generates the tag, and push it to Docker Hub:
 
 ```bash
-./docker-push
+./bin/docker-push
 ```
