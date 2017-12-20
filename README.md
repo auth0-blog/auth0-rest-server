@@ -63,9 +63,9 @@ docker run --name secured-wildcard-mongo \
 
 docker run --name secured-wildcard \
   --network digituz \
-  -e "MONGODB_URL=secured-wildcard-mongo:27017/contacts" \
-  -e "AUTH0_DOMAIN=bk-samples.auth0.com" \
-  -e "AUTH0_AUDIENCE=https://contacts.digituz.com.br" \
+  -e "MONGODB_URL=secured-wildcard-mongo:27017/transactions-rest" \
+  -e "AUTH0_DOMAIN=digituz-corp.auth0.com" \
+  -e "AUTH0_AUDIENCE=https://transactions.digituz.com.br/" \
   -d brunokrebs/secured-wildcard
 ```
 
