@@ -29,11 +29,11 @@ async function update(userId, entity, data) {
 }
 
 // retrieves data from a collection called `${userId}/${entity}`
-async function find(userId, entity, filter) {
+async function find(userId, entity, filter, sort) {
   console.log(`- Querying ${userId}/${entity.name} with filter: ${filter}`);
   const connection = await getConnection();
   const collection = connection.collection(`${userId}/${entity.name}`);
-  const result = await collection.find(filter);
+  const result = await collection.find(filter).sort(sort);
   return await result.toArray();
 }
 

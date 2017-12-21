@@ -6,9 +6,14 @@ module.exports = {
 
 async function getEntities(ctx) {
   const {state, query} = ctx;
-  ctx.body = await mongo
-    .find(state.user.sub, state.entity, JSON.parse(query.filter || '{}'))
-    .sort(JSON.parse(query.sort || '{}'));
+
+  ctx.body = await mongo.find(
+    state.user.sub,
+    state.entity,
+    JSON.parse(query.filter || '{}'),
+    JSON.parse(query.sort || '{}')
+  );
+
   ctx.body = ctx.body || [];
   ok(ctx);
 }
