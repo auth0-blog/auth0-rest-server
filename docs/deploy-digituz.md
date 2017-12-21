@@ -20,7 +20,7 @@ docker network create $DIGITUZ_NETWORK
 Then, before starting a dockerized RestFlex instance, we need to bootstrap a MongoDB instance:
 
 ```bash
-docker run --name secured-wildcard-mongo \
+docker run --name rest-flex-mongo \
   --network $DIGITUZ_NETWORK \
   -p 27017:27017 \
   -d mongo
@@ -29,8 +29,10 @@ docker run --name secured-wildcard-mongo \
 After all, we can bootstrap RestFlex:
 
 ```bash
+docker build -t rest-flex .
+
 DOMAIN=transactions
-MONGODB_URL=secured-wildcard-mongo:27017/$DOMAIN
+MONGODB_URL=rest-flex-mongo:27017/$DOMAIN
 AUTH0_DOMAIN=digituz-corp.auth0.com
 AUTH0_AUDIENCE=https://$DOMAIN.digituz.com.br/
 
@@ -40,5 +42,5 @@ docker run --name $DOMAIN-rest \
   -e "MONGODB_URL="$MONGODB_URL \
   -e "AUTH0_DOMAIN="$AUTH0_DOMAIN \
   -e "AUTH0_AUDIENCE="$AUTH0_AUDIENCE \
-  -d brunokrebs/secured-wildcard
+  -d rest-flex
 ```
