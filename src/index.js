@@ -17,41 +17,44 @@ app.use(async function exceptionHandler(ctx, next) {
     if (err.message && err.message.indexOf('Unexpected token') === 0 && err.message.indexOf('JSON') > 1){
       ctx.body = { 'message': 'It looks like the filter parameter passed contains a wrong structure.' }
     } else {
-      console.log(err);
+      console.err('### Oooops!');
+      console.err(`### An error occurred on ${(new Date()).toString()}`);
+      console.err(err);
     }
   }
 });
 app.use(cors());
 
-const {AUTH0_DOMAIN, AUTH0_AUDIENCE, MONGODB_URL} = process.env;
-if (!AUTH0_DOMAIN || !AUTH0_AUDIENCE || !MONGODB_URL) {
-  console.log('Please, set the following environment variables: AUTH0_DOMAIN, AUTH0_AUDIENCE, and MONGODB_URL');
+const {DOMAIN, AUTH0_DOMAIN, AUTH0_AUDIENCE, MONGODB_URL} = process.env;
+if (!DOMAIN || !AUTH0_DOMAIN || !AUTH0_AUDIENCE || !MONGODB_URL) {
+  console.log('Please, set the following environment variables: DOMAIN, AUTH0_DOMAIN, AUTH0_AUDIENCE, and MONGODB_URL');
   process.exit(1);
 }
 
-console.log(`### Enforcing '${process.env.AUTH0_DOMAIN}' as the domain issuer for tokens.`);
-console.log(`### Enforcing '${process.env.AUTH0_AUDIENCE}' as the audience for tokens.`);
-console.log(`### Using '${process.env.MONGODB_URL}' to connect to MongoDB.`);
+console.log(`### The topic of this microservice is '${DOMAIN}'.`);
+console.log(`### We will enforce '${AUTH0_DOMAIN}' as the domain issuer for tokens.`);
+console.log(`### We will expect that the token is issued for the '${AUTH0_AUDIENCE}' audience.`);
+console.log(`### Our data will be persisted to the '${MONGODB_URL}' MongoDB database.`);
 
 app.use(jwt({
   secret: koaJwtSecret({
-    jwksUri: `https://${process.env.AUTH0_DOMAIN}/.well-known/jwks.json`,
+    jwksUri: `https://${AUTH0_DOMAIN}/.well-known/jwks.json`,
     cache: true
   }),
-  audience: process.env.AUTH0_AUDIENCE,
-  issuer: `https://${process.env.AUTH0_DOMAIN}/`
+  audience: AUTH0_AUDIENCE,
+  issuer: `https://${AUTH0_DOMAIN}/`
 }));
 
 async function checkScopes(ctx, next) {
-  const {entity, id} = ctx.params;
+  const {id} = ctx.params;
   const scopes = ctx.state.user.scope.split(' ');
-  const scopeNeeded = ctx.method.toLowerCase() + ':' + entity;
+  const scopeNeeded = ctx.method.toLowerCase() + ':' + DOMAIN;
   const hasScopes = scopes.find(element => {
     return element === scopeNeeded;
   });
   if (hasScopes) {
     ctx.state.entity = {
-      name: entity,
+      name: DOMAIN,
       id: id
     };
     return await next();
@@ -59,11 +62,11 @@ async function checkScopes(ctx, next) {
   return ctx.status = 401;
 }
 
-router.get('/:entity', checkScopes, endpoints.getEntities);
-router.get('/:entity/:id', checkScopes, endpoints.getEntity);
-router.post('/:entity', checkScopes, endpoints.addNewEntity);
-router.put('/:entity/:id', checkScopes, endpoints.updateEntity);
-router.delete('/:entity/:id', checkScopes, endpoints.deleteEntity);
+router.get('/', checkScopes, endpoints.getEntities);
+router.get('/:id', checkScopes, endpoints.getEntity);
+router.post('/', checkScopes, endpoints.addNewEntity);
+router.put('/:id', checkScopes, endpoints.updateEntity);
+router.delete('/:id', checkScopes, endpoints.deleteEntity);
 
 app.use(bodyParser());
 app.use(router.routes());

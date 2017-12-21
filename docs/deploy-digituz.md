@@ -29,12 +29,14 @@ docker run --name secured-wildcard-mongo \
 After all, we can bootstrap RestFlex:
 
 ```bash
-MONGODB_URL=secured-wildcard-mongo:27017/transactions
+DOMAIN=transactions
+MONGODB_URL=secured-wildcard-mongo:27017/$DOMAIN
 AUTH0_DOMAIN=digituz-corp.auth0.com
-AUTH0_AUDIENCE=https://transactions.digituz.com.br/
+AUTH0_AUDIENCE=https://$DOMAIN.digituz.com.br/
 
 docker run --name secured-wildcard \
   --network digituz \
+  -e "DOMAIN="$DOMAIN \
   -e "MONGODB_URL="$MONGODB_URL \
   -e "AUTH0_DOMAIN="$AUTH0_DOMAIN \
   -e "AUTH0_AUDIENCE="$AUTH0_AUDIENCE \
