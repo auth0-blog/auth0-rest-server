@@ -34,7 +34,7 @@ MONGODB_URL=secured-wildcard-mongo:27017/$DOMAIN
 AUTH0_DOMAIN=digituz-corp.auth0.com
 AUTH0_AUDIENCE=https://$DOMAIN.digituz.com.br/
 
-docker run --name secured-wildcard \
+docker run --name $DOMAIN-rest \
   --network digituz \
   -e "DOMAIN="$DOMAIN \
   -e "MONGODB_URL="$MONGODB_URL \
