@@ -42,7 +42,8 @@ app.use(jwt({
     cache: true
   }),
   audience: AUTH0_AUDIENCE,
-  issuer: `https://${AUTH0_DOMAIN}/`
+  issuer: `https://${AUTH0_DOMAIN}/`,
+  debug: true
 }));
 
 async function checkScopes(ctx, next) {
